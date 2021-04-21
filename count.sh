@@ -14,14 +14,12 @@ fi
 # make all text lowercase
 TMP="$(tr [:upper:] [:lower:] < ${FILE})"
 
-# split it into individual words per line
-TMP="$(echo "${TMP}" | sed 's/[[:space:]]/\n/g')"           # replace all whitespaces with newline
-TMP="$(echo "${TMP}" | sed '/^$/d')"                        # remove empty lines 
-TMP="$(echo "${TMP}" | sed '/[[:punct:]]/d')"               # remove punctuation
+# split it into individual words per line (replace all spaces with newline, remove empty lines, remove punctuation)
+TMP="$(echo "${TMP}" | sed 's/[[:space:]]/\n/g' | sed '/^$/d' | sed '/[[:punct:]]/d')"                       
 
 # alphabetically sort the list of words and remove duplicates (with the number of occurences -c)
-TMP="$(echo "${TMP}" | sort | uniq -c)" 
+TMP="$(echo "${TMP}" | sort | uniq -c)"
 
-# print out the 10 most common words in the text (without number of occurrences) on stdout (uniq, sort, and head)
-echo "${TMP}" | sort -r | awk '{print $2}'| head 
-# echo "${TMP}" | sort -r | cut -d' ' -f8 | head # another method to do that
+# print out the 10 most common words in the text (without number of occurrences) on stdout
+echo "${TMP}" | sort -rn | awk '{print $2}'| head
+# echo "${TMP}" | sort -rn | cut -d' ' -f8 | head          # another method to do that
